@@ -1,13 +1,16 @@
 package com.example.springbootmongodb.controller;
 
+import com.example.springbootmongodb.exception.TodoCollectionException;
 import com.example.springbootmongodb.model.TodoDTO;
 import com.example.springbootmongodb.repository.TodoRepository;
+import com.example.springbootmongodb.service.TodoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +21,9 @@ public class TodoController {
 
     @Autowired
     private TodoRepository todoRepository;
+
+    @Autowired
+    private TodoService todoService;
 
     @GetMapping("/todos")
     public ResponseEntity<?> getAllTodos() {
@@ -33,13 +39,14 @@ public class TodoController {
 
     @PostMapping(value = "/todos", consumes = "application/json")
     public ResponseEntity<?> createTodo(@RequestBody TodoDTO todoDTO) {
-        log.info("created todo - {}", todoDTO);
+        log.info("trying to create a todo - {}", todoDTO);
         try {
-            todoDTO.setCreatedAt(new Date(System.currentTimeMillis()));
-            todoRepository.save(todoDTO);
+            todoService.CreateTodo(todoDTO);
             return new ResponseEntity<>(todoDTO, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (ConstraintViolationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (TodoCollectionException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
