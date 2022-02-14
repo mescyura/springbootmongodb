@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "todos")
-public class TodoDTO {
+public class Todo {
     @Id
     private String id;
     @NotNull(message = "todo cannot be null")

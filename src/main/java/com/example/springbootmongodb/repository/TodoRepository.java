@@ -1,6 +1,6 @@
 package com.example.springbootmongodb.repository;
 
-import com.example.springbootmongodb.model.TodoDTO;
+import com.example.springbootmongodb.model.Todo;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface TodoRepository extends MongoRepository<TodoDTO, String> {
+public interface TodoRepository extends MongoRepository<Todo, String> {
 
     @Query("{'todo' : ?0}")
-    Optional<TodoDTO> findByTodo(String todo);
+    Optional<Todo> findByTodo(String todo);
 }
