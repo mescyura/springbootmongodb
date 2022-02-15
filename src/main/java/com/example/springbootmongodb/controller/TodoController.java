@@ -2,7 +2,6 @@ package com.example.springbootmongodb.controller;
 
 import com.example.springbootmongodb.exception.TodoCollectionException;
 import com.example.springbootmongodb.model.Todo;
-import com.example.springbootmongodb.repository.TodoRepository;
 import com.example.springbootmongodb.service.TodoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 @Slf4j
 @RestController
 public class TodoController {
@@ -43,7 +40,7 @@ public class TodoController {
 
     @GetMapping("/todos/{id}")
     public ResponseEntity<?> getTodoById(@PathVariable("id") String id) {
-        log.info("get todo by id {} controller",id);
+        log.info("get todo by id {} controller", id);
         try {
             return new ResponseEntity<>(todoService.getTodoById(id), HttpStatus.OK);
         } catch (Exception e) {
@@ -53,7 +50,7 @@ public class TodoController {
 
     @PutMapping("/todos/{id}")
     public ResponseEntity<?> updateTodoById(@PathVariable("id") String id, @RequestBody Todo todo) {
-        log.info("update todo by id {} controller",id);
+        log.info("update todo by id {} controller", id);
         try {
             todoService.updateTodo(id, todo);
             return new ResponseEntity<>("updated todo with id - " + id, HttpStatus.OK);
@@ -66,7 +63,7 @@ public class TodoController {
 
     @DeleteMapping("/todos/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") String id) {
-        log.info("delete todo by id {} controller",id);
+        log.info("delete todo by id {} controller", id);
         try {
             todoService.deleteTodoById(id);
             return new ResponseEntity<>("Successfully deleted todo by id - " + id, HttpStatus.OK);
