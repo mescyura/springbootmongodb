@@ -5,13 +5,12 @@ import com.example.springbootmongodb.model.Todo;
 import com.example.springbootmongodb.repository.TodoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -43,6 +42,26 @@ public class TodoServiceImpl implements TodoService {
             log.warn("no todos in the database");
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public Map<String, Object> getAllTodos(int page, int size, String todo) {
+        List<Todo> todos;
+        PageRequest paging = PageRequest.of(page, size);
+        Page<Todo> pageTodos;
+        if (todo == null) {
+            pageTodos = todoRepository.findAll(paging);
+
+        } else {
+            pageTodos = todoRepository.findByTodoContainingIgnoreCase(todo, paging);
+        }
+        todos = pageTodos.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("todos", todos);
+        response.put("currentPage", pageTodos.getNumber());
+        response.put("totalItems", pageTodos.getTotalElements());
+        response.put("totalPages", pageTodos.getTotalPages());
+        return response;
     }
 
     @Override

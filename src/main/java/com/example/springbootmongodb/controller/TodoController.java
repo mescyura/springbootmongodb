@@ -10,7 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
-import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @RestController
 public class TodoController {
@@ -19,10 +20,12 @@ public class TodoController {
     private TodoService todoService;
 
     @GetMapping("/todos")
-    public ResponseEntity<?> getAllTodos() {
+    public ResponseEntity<Map<String, Object>> getAllTodos(@RequestParam(required = false) String todo,
+                                                           @RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "3") int size) {
         log.info("getting all todos controller");
-        List<Todo> todos = todoService.getAllTodos();
-        return new ResponseEntity<>(todos, todos.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+        Map<String, Object> allTodos = todoService.getAllTodos(page, size, todo);
+        return new ResponseEntity<>(allTodos, HttpStatus.OK);
     }
 
     @PostMapping(value = "/todos", consumes = "application/json")
